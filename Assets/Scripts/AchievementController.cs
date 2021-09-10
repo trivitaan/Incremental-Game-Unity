@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class AchievementController : MonoBehaviour
 {
@@ -52,6 +53,32 @@ public class AchievementController : MonoBehaviour
     public void UnlockAchievement(AchievementType type, string value)
     {
         //mencari data achievement
-        AchievementData achievement = _achievementList.Find(a => a.Type == type && a.Value)
+        AchievementData achievement = _achievementList.Find(a => a.Type == type && a.Value == value);
+        if(achievement != null && !achievement.IsUnlocked)
+        {
+            achievement.IsUnlocked = true;
+            ShowAchievementPopUp(achievement);
+        }
     }
+
+    private void ShowAchievementPopUp(AchievementData achievement)
+    {
+        _popUpText.text = achievement.Title;
+        _popUpShowDurationCounter = _popUpShowDuration;
+        _popUpTransform.localScale = Vector2.right;
+    }
+}
+
+[System.Serializable]
+public class AchievementData
+{
+    public string Title;
+    public AchievementType Type;
+    public string Value;
+    public bool IsUnlocked;
+}
+
+public enum AchievementType
+{
+    UnlockResource
 }
